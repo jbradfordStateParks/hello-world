@@ -1,0 +1,77 @@
+<script type="text/javascript">
+    $(function () {
+        $("#parkProgram td.col3").hide();
+        $("#parkProgram td.col1").hide();
+        $("#parkProgram td.col2").hide();
+
+        $('#category').change(function () {
+            var filter2 = $('#category').val();
+            $("#parkProgram td.col3").parent().show();
+
+            if ($('#region').val() !== "all") {
+                $("#test td.col3:contains('" + $('#region').val() + "')").parent().show().siblings().hide();
+                $("#parkProgram td.col3:contains('" + $('#region').val() + "')").parent().show();
+            }
+            if ($('#category').val() !== "all") {
+                $("#parkProgram td.col1").each(function () {
+                    //        console.log('"' + $(this).text() + '"', '"' + $('#category').val() + '"');
+                    if ($(this).text().trim() != $('#category').val().trim()) {
+                        $(this).parent().hide();
+                    }
+                }) //each
+            }
+        });
+    });
+</script>
+<section>
+  <div class="form-group ">
+      <label for="region">Choose a Region</label>
+      <select class="form-control" id="region">
+          <option value="NORTH">North</option>
+          <option value="CENTRAL">Central</option>
+          <option value="SOUTH">South</option>
+      </select>
+  </div>
+  <div class="form-group ">
+      <label for="category">Select a Category</label>
+      <select class="form-control" id="category">
+          <option value="all">Show All Programs</option>
+          <option value="ART">Arts & Crafts</option>
+          <option value="ARCH">Archeology</option>
+          <option value="BIRD">Birdwatching</option>
+          <option value="CFP">Campfire Program</option>
+      </select>
+  </div>
+  
+  <table id="parkProgram" class="table-hover">
+      <tbody>
+          @foreach (var item in Model.OrderBy(i => i.Date).ThenBy(n => n.ParkName))
+          {
+              if (item.Date.HasValue && item.Date >= DateTime.Today)
+              {
+                  <tr>
+                      <td style="padding-right:20px;">
+                          <h4>@item.Date.Value.ToString("dddd"),</h4>
+                          <h4>@item.Date.Value.ToString("MMMM dd"),</h4>
+                          <h4>@Html.DisplayFor(modelItem => item.ProgramTime)</h4>
+                      </td>
+                      <td>
+                          <h3>@Html.DisplayFor(modelItem => item.ProgramName)</h3>
+                          <p><a href="@Html.DisplayFor(modelItem => item.Link)"> @Html.DisplayFor(modelItem => item.ParkName)</a></p>
+                          <p>@Html.DisplayFor(modelItem => item.ProgramDescription)</p>
+                      </td>
+                      <td class="col1">
+                          <p>@Html.DisplayFor(modelItem => item.ProgramCategory) </p>
+                      </td>
+                      <td class="col3">
+                          <p>@Html.DisplayFor(modelItem => item.ParkRegion)</p>
+                      </td>
+                      <td class="col2">
+                          @Html.ActionLink("ParkDetails", "Details", new { id = item.ID })
+                      </td>
+                  </tr>
+              }
+          }
+      </tbody>
+  </table>
+  
