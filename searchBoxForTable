@@ -1,0 +1,61 @@
+<script type="text/javascript">
+    function myFunction() {
+        var input, filter, table, tr, td, i;
+        input = document.getElementById("myInput");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myTable");
+        tr = table.getElementsByTagName("tr");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[2];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+</script>
+
+<input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search for names.." title="Type in a name">
+
+<table>
+	<tr>
+		<th>
+			Sort Order
+		</th>
+		<th style="color:darkslategray;">
+			@Html.ActionLink("Park", "Index", new { sortOrder = ViewBag.ParkSortParm })
+		</th>
+		<th class="sortColor">
+			@Html.ActionLink("Date", "Index", new { sortOrder = ViewBag.DateSortParm })
+		</th>
+	</tr>
+	
+	 @foreach (var item in Model.OrderBy(i => i.Date))
+        {
+            <tr>
+                <td>
+                    <br />
+                    <h4>@item.Date.Value.ToString("dddd"),</h4>
+                    <h4>@item.Date.Value.ToString("MMMM dd")</h4>
+                </td>
+                <td>
+                    <h3>@Html.DisplayFor(modelItem => item.Program)</h3>
+
+                    <p>@Html.DisplayFor(modelItem => item.Time) <strong><a href="@Html.DisplayFor(modelItem => item.Park_Link)"> @Html.DisplayFor(modelItem => item.Park)</a></strong></p>
+
+                    <p>@Html.DisplayFor(modelItem => item.Description)</p>
+
+                    <p>@Html.DisplayFor(modelItem => item.Category) </p>
+                </td>
+                <td>
+                    <p>@Html.DisplayFor(modelItem => item.Region)</p>
+                </td>
+                <td>
+                    @Html.ActionLink("Details", "Details", new { id = item.ID })
+                </td>
+            </tr>
+        }
+</table>
